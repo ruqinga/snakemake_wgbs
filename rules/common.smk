@@ -54,11 +54,6 @@ def get_all(directories, samples):
             sample=samples
         )
         all_targets += expand(
-            "{clean_out}/cut/{sample}_1_val_1.fq.gz",
-            clean_out=directories["clean_out"],
-            sample=samples
-        )
-        all_targets += expand(
             "{bis_out}/{sample}_1_val_1_bismark_bt2_pe.bam",
             bis_out=directories["bis_out"],
             sample=samples
@@ -75,11 +70,6 @@ def get_all(directories, samples):
         )
 
     elif dt == "SE":
-        all_targets += expand(
-            "{clean_out}/{sample}.fq.gz",
-            clean_out=directories["clean_out"],
-            sample=samples
-        )
         all_targets += expand(
             "{bis_out}/{sample}_trimmed_bismark_bt2_se.bam",
             bis_out=directories["bis_out"],
