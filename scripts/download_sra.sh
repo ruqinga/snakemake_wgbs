@@ -11,6 +11,9 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+# 有报错立马退出
+set -euo pipefail
+
 srr_list_file="$1"
 output_dir="$(dirname "$srr_list_file")"
 
