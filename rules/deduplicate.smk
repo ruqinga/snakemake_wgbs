@@ -13,7 +13,9 @@ rule deduplicate_bismark:
     group: "processing_group"
     params:
         dedu_out = directories["dedu_out"]
+    log:
+        log="{bis_out}/logs/{sample}.log"
     shell:
         """
-        deduplicate_bismark --bam {input.bam} --output_dir {params.dedu_out}
+        deduplicate_bismark --bam {input.bam} --output_dir {params.dedu_out} > {log.log} 2>&1
         """

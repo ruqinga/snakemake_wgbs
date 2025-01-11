@@ -16,11 +16,13 @@ rule bismark:
         option = config["bismark"]["params"],
         genome = config["bismark"]["index"],
         bis_out = directories["bis_out"]
+    log:
+        log="{bis_out}/logs/{sample}.log"
     shell:
         """
         if [ "{config[dt]}" == "SE" ]; then
-            bismark {params.option} --genome {params.genome} {input.trimmed_read} -o {params.bis_out}
+            bismark {params.option} --genome {params.genome} {input.trimmed_read} -o {params.bis_out} > {log.log} 2>&1
         else
-            bismark {params.option} --genome {params.genome} -1 {input.trimmed_read[0]} -2 {input.trimmed_read[1]} -o {params.bis_out}
+            bismark {params.option} --genome {params.genome} -1 {input.trimmed_read[0]} -2 {input.trimmed_read[1]} -o {params.bis_out} > {log.log} 2>&1
         fi
         """

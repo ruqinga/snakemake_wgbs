@@ -21,7 +21,7 @@ json_array_pe=()
 json_array_se=()
 
 # 遍历所有 .fastq.gz 文件
-for file in $(find "$work_dir" -name "*.fastq.gz" | sort); do
+for file in $(find "$fq_dir" -name "*.fastq.gz" | sort); do
     # 检查是否是带 _1.fastq.gz 或 _2.fastq.gz 的 PE 文件
     if [[ "$file" =~ _1.fastq.gz$ ]]; then
         # 获取对应的 _2 文件
@@ -68,7 +68,7 @@ if [[ -n "$json_output_pe" ]]; then
     snakemake \
         -np \
         --executor cluster-generic \
-        --cluster-generic-submit-cmd 'qsub -q slst_pub -N rna_pe.pbs -l nodes=1:ppn=20' \
+        --cluster-generic-submit-cmd 'qsub -q slst_pub -N bs_pe.pbs -l nodes=1:ppn=20 -j oe' \
         --latency-wait 60 \
         --jobs 4 \
         --use-conda \
@@ -81,7 +81,7 @@ if [[ -n "$json_output_se" ]]; then
     snakemake \
         -np \
         --executor cluster-generic \
-        --cluster-generic-submit-cmd 'qsub -q slst_pub -N rna_se.pbs -l nodes=1:ppn=20' \
+        --cluster-generic-submit-cmd 'qsub -q slst_pub -N bs_se.pbs -l nodes=1:ppn=20 -j oe' \
         --latency-wait 60 \
         --jobs 4 \
         --use-conda \
@@ -107,11 +107,11 @@ if [[ -n "$json_output_pe" ]]; then
     echo "开始处理双端数据..."
     snakemake \
         --executor cluster-generic \
-        --cluster-generic-submit-cmd 'qsub -q slst_pub -N rna_pe.pbs -l nodes=1:ppn=20' \
+        --cluster-generic-submit-cmd 'qsub -q slst_pub -N bs_pe.pbs -l nodes=1:ppn=20 -j oe' \
         --latency-wait 60 \
-        --jobs 4 \
+        --jobs 5 \
         --use-conda \
-        --group-components processing=4 \
+        --group-components processing=50 \
         --config fq_dir="$fq_dir" work_dir="$work_dir" dt="PE" reads="$json_output_pe"
 fi
 
@@ -119,11 +119,11 @@ if [[ -n "$json_output_se" ]]; then
     echo "开始处理单端数据..."
     snakemake \
         --executor cluster-generic \
-        --cluster-generic-submit-cmd 'qsub -q slst_pub -N rna_se.pbs -l nodes=1:ppn=20' \
+        --cluster-generic-submit-cmd 'qsub -q slst_pub -N bs_se.pbs -l nodes=1:ppn=20 -j oe' \
         --latency-wait 60 \
-        --jobs 4 \
+        --jobs 5 \
         --use-conda \
-        --group-components processing=4 \
+        --group-components processing=50 \
         --config fq_dir="$fq_dir" work_dir="$work_dir" dt="SE" reads="$json_output_se"
 fi
 

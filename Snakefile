@@ -1,5 +1,3 @@
-import os
-
 configfile: "config.yaml"
 
 include: "rules/common.smk"
