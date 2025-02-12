@@ -1,6 +1,10 @@
 # 基于Snakemake的WGBS数据处理
 
-修改日期：2024.12.24
+修改日期：2024.01.15
+
+待更新：
+- 支持tsv输入
+- 保存json到snakemake，方便删除原始数据后依然可以复现
 
 1. **核心功能**：通过 snakemake 实现了从 `fastq.gz` 到甲基化信息的 wgbs 数据全流程处理，并允许通过修改 config 处理 pbat 数据
 2. **sraid 处理**：对于sra数据，在scripts下提供了 `download_sra.sh` 和 `sra2fq.sh` 两个脚本，实现根据sraid下载数据，重命名并解压为fastq.gz
