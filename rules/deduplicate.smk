@@ -14,7 +14,7 @@ rule deduplicate_bismark:
     params:
         dedu_out = directories["dedu_out"]
     log:
-        log="{bis_out}/logs/{sample}.log"
+        log="{dedu_out}/logs/{sample}.log"
     shell:
         """
         deduplicate_bismark --bam {input.bam} --output_dir {params.dedu_out} > {log.log} 2>&1

@@ -19,7 +19,7 @@ rule trim:
         clean_out = directories["clean_out"],
         trim_out = f"{directories['clean_out']}/trim_galore"
     log:
-        log = "{trim_out}/logs/{sample}.log"
+        log = "{clean_out}/trim_galore/logs/{sample}.log"
     shell:
         """
         if [ "{config[dt]}" == "SE" ]; then
