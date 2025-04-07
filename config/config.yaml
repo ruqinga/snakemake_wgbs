@@ -1,14 +1,14 @@
 fq_dir: ""
-work_dir: ""
+bismark_strategy: "" #--pbat
 
 # Input Reads
-dt: "" # datatype = SE or PE
-
 reads:
   - read1: " "  # Provide read1 file path
     read2: " "  # Provide read2 file path if PE, else leave empty
 
 #### 上面部分会通过run.sh提供，只用修改下面的部分 ####
+
+# Spe 为 mm10
 
 # Environment
 conda_env: "base-omics"
@@ -20,20 +20,8 @@ cutadapt:
   pe: "-a GGGGGGGGGGGGX -a AGATCGGAAGAG -A AGATCGGAAGAG -A GGGGGGGGGGGGX -g CTCTTCCGATCT -G CTCTTCCGATCT -n 10 --max-n 0.05 -q 20,20 -u -10 -U 10 -m 30 -e 0.2"
   se: "-a GGGGGGGGGGGGX -a AGATCGGAAGAG -g CTCTTCCGATCT -n 10 --max-n 0.05 -q 20 -u -10 -m 30 -e 0.2"
 bismark:
-  strategy: "" #--pbat
   params: ""
   index: "/public/slst/home/qushy/toolkit/reference_genome/index/WGBS-index"
   #genome_fasta: "/public/slst/home/qushy/toolkit/reference_genome/index/WGBS-index/mm10-lambdaDNA.fa"
 bis_extractor:
   params: "--gzip --bedGraph --counts --report --comprehensive --cytosine_report"
-
-# Output Directories
-# 输出的目录格式，有些被硬编码到了流程中，不建议修改
-directories:
-  sra_dir: "{work_dir}/sra"
-  trim_out: "{work_dir}/02_cleandata/trim_galore"
-  clean_out: "{work_dir}/02_cleandata"
-  bis_out: "{work_dir}/03_bismark"
-  dedu_out: "{work_dir}/04_dedu"
-  extract_out: "{work_dir}/05_extract"
-  log_out: "{work_dir}/log"

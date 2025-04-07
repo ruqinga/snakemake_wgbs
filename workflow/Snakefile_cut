@@ -1,0 +1,25 @@
+configfile: "config/config.yaml"
+include: "rules/common.smk"
+
+# 获取全局参数
+# print(f"Config: {config}")
+
+processor = SampleProcessor(config)
+sample_info = processor.sample_info
+samples = processor.sample_names
+
+print(sample_info)
+print(processor.get_all_targets())
+
+rule all:
+    input: processor.get_all_targets()
+
+
+#load rules
+include: "rules/trim.smk"
+include: "rules/qc.smk"
+include: "rules/cut_bismark.smk" # 处理我们的数据
+#include: "rules/bismark.smk" # 处理公开数据
+include: "rules/deduplicate.smk" # 去重，无法修改去重阈值
+include: "rules/extract.smk" # 提取甲基化信息
+

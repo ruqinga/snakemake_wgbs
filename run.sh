@@ -1,14 +1,55 @@
 #!/bin/bash
 # 用于处理单端和双端数据并调用 Snakemake 运行流程
-# 用法: bash run.sh <work_dir> <fq_dir> -y
+# 用法: bash run.sh <fq_dir> [--cut] [--pbat] [-y]
 
-# 默认工作目录为上一级目录
-work_dir="${1:-../}"
-echo "工作目录设置为: $work_dir"
+# 默认值
+Snakefile="./workflow/Snakefile"  # 默认选择 Snakefile
+bismark_strategy=""
 
-# 默认fq目录为工作目录下的01_rawdata目录
-fq_dir="${2:-${work_dir}/01_rawdata}"
-echo "原始数据目录: $fq_dir"
+# 解析命令行选项
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        --cut)
+            Snakefile="./workflow/Snakefile_cut"  # 如果指定了 --cut，则选择 Snakefile
+            shift
+            ;;
+        --pbat)
+            bismark_strategy="--pbat"  # 如果指定了 --pbat，则设置 bismark_strategy
+            shift
+            ;;
+        -y)
+            confirm="yes"  # -y 标志，表示确认
+            shift
+            ;;
+        *)
+            fq_dir="$1"  # 处理第一个参数 fq_dir
+            shift
+            ;;
+    esac
+done
+
+# 确保 fq_dir 参数存在
+if [ -z "$fq_dir" ]; then
+    echo "错误: 未指定输入目录!"
+    exit 1
+fi
+
+echo "输入数据目录: $fq_dir"
+# 判断是否使用cut
+if [ "$Snakefile" == "./workflow/Snakefile" ]; then
+    echo "不使用 cut"
+else
+    echo "运行 cut_bismark 处理 zhenglab data"
+fi
+
+# 判断 bismark_strategy 的值来输出不同信息
+if [ -z "$bismark_strategy" ]; then
+    echo "处理 wgbs data"
+else
+    echo "处理 pbat data"
+fi
+echo "---------------"
+
 
 # 激活 Snakemake 的 Conda 环境
 source ~/.bashrc
@@ -19,9 +60,13 @@ conda activate snakemake_env
 # 初始化数组
 json_array_pe=()
 json_array_se=()
+json_array=()
 
 # 遍历所有 .fastq.gz 文件
-for file in $(find "$fq_dir" -name "*.fastq.gz" -maxdepth 1 | sort); do
+for file in $(find "$fq_dir" -maxdepth 1 -name "*.fastq.gz" | sort); do
+
+    file=$(realpath "$file")  # 处理路径中的特殊字符，比如空格
+
     # 检查是否是带 _1.fastq.gz 或 _2.fastq.gz 的 PE 文件
     if [[ "$file" =~ _1.fastq.gz$ ]]; then
         # 获取对应的 _2 文件
@@ -31,17 +76,22 @@ for file in $(find "$fq_dir" -name "*.fastq.gz" -maxdepth 1 | sort); do
             # 如果 _2 文件存在，则添加到 PE 数组
             json_entry_pe="{\"read1\": \"$file\", \"read2\": \"$file2\"}"
             json_array_pe+=("$json_entry_pe")
+            json_array+=("$json_entry_pe")
         fi
     elif [[ ! "$file" =~ _1.fastq.gz$ && ! "$file" =~ _2.fastq.gz$ ]]; then
         # 如果不是 _1 或 _2，视为 SE 文件
         json_entry_se="{\"read1\": \"$file\"}"
         json_array_se+=("$json_entry_se")
+        json_array+=("$json_entry_se")
     fi
 done
 
 # 将数组转换为 JSON 字符串
 json_output_pe=$(IFS=,; echo "[${json_array_pe[*]}]")
 json_output_se=$(IFS=,; echo "[${json_array_se[*]}]")
+json_output=$(IFS=,; echo "[${json_array[*]}]")
+
+#echo "$json_output"
 
 # 检查 JSON 数据是否为空并输出相应的提示信息
 if [[ -z "$json_output_se" || "$json_output_se" == "[]" ]]; then
@@ -61,37 +111,17 @@ else
 fi
 
 
-
 # 运行 Snakemake 工作流（预览模式）
-if [[ -n "$json_output_pe" ]]; then
-    echo "运行 Snakemake 处理双端数据（仅预览）..."
-    snakemake \
-        -np \
-        --executor cluster-generic \
-        --cluster-generic-submit-cmd 'qsub -q slst_pub -N bs_pe.pbs -l nodes=1:ppn=20 -j oe' \
-        --latency-wait 60 \
-        --jobs 4 \
-        --use-conda \
-        --group-components processing=4 \
-        --config fq_dir="$fq_dir" work_dir="$work_dir" dt="PE" reads="$json_output_pe"
-fi
-
-if [[ -n "$json_output_se" ]]; then
-    echo "运行 Snakemake 处理单端数据（仅预览）..."
-    snakemake \
-        -np \
-        --executor cluster-generic \
-        --cluster-generic-submit-cmd 'qsub -q slst_pub -N bs_se.pbs -l nodes=1:ppn=20 -j oe' \
-        --latency-wait 60 \
-        --jobs 4 \
-        --use-conda \
-        --group-components processing=4 \
-        --config fq_dir="$fq_dir" work_dir="$work_dir" dt="SE" reads="$json_output_se"
-fi
+echo "运行 Snakemake （仅预览）..."
+snakemake \
+    -np \
+    --use-conda \
+    --snakefile "$Snakefile" \
+    --config fq_dir="$fq_dir" reads="$json_output"
 
 # 提示是否确认实际执行任务
 # 检查是否传递了 -y 参数
-if [[ "$3" == "-y" ]]; then
+if [[ "$5" == "-y" ]]; then
     confirm_run="y"
 else
     read -p "是否确认执行任务（实际提交作业）？(y/n): " confirm_run
@@ -103,28 +133,16 @@ if [[ "$confirm_run" != "y" && "$confirm_run" != "Y" ]]; then
 fi
 
 # 实际运行 Snakemake 工作流
-if [[ -n "$json_output_pe" ]]; then
-    echo "开始处理双端数据..."
-    snakemake \
-        --executor cluster-generic \
-        --cluster-generic-submit-cmd 'qsub -q slst_pub -N bs_pe.pbs -l nodes=1:ppn=20 -j oe' \
-        --latency-wait 60 \
-        --jobs 5 \
-        --use-conda \
-        --group-components processing=50 \
-        --config fq_dir="$fq_dir" work_dir="$work_dir" dt="PE" reads="$json_output_pe"
-fi
+echo "运行 Snakemake ..."
+snakemake \
+    --snakefile "$Snakefile" \
+    --executor cluster-generic \
+    --cluster-generic-submit-cmd "python workflow/scripts/submit_job.py --config config/cluster_config.yaml --seqtype "bs" --sample {wildcards} --rule {rule}" \
+    --latency-wait 60 \
+    --jobs 5 \
+    --use-conda \
+    --groups processing_group=20 global_process=6 \
+    --config fq_dir="$fq_dir" reads="$json_output" bismark_strategy="$bismark_strategy"
 
-if [[ -n "$json_output_se" ]]; then
-    echo "开始处理单端数据..."
-    snakemake \
-        --executor cluster-generic \
-        --cluster-generic-submit-cmd 'qsub -q slst_pub -N bs_se.pbs -l nodes=1:ppn=20 -j oe' \
-        --latency-wait 60 \
-        --jobs 5 \
-        --use-conda \
-        --group-components processing=50 \
-        --config fq_dir="$fq_dir" work_dir="$work_dir" dt="SE" reads="$json_output_se"
-fi
 
 echo "任务已完成！"

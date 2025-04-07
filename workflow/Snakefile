@@ -1,20 +1,23 @@
-configfile: "config.yaml"
-
+configfile: "config/config.yaml"
 include: "rules/common.smk"
 
 # 获取全局参数
-print(f"Config: {config}")
+# print(f"Config: {config}")
 
-directories = get_directories(config)
-samples = get_sample_list(config)
+processor = SampleProcessor(config)
+sample_info = processor.sample_info
+samples = processor.sample_names
+
+print(sample_info)
+print(processor.get_all_targets())
 
 rule all:
-    input:
-        get_all(directories, samples)
+    input: processor.get_all_targets()
 
 
 #load rules
 include: "rules/trim.smk"
+include: "rules/qc.smk"
 #include: "rules/cut_bismark.smk" # 处理我们的数据
 include: "rules/bismark.smk" # 处理公开数据
 include: "rules/deduplicate.smk" # 去重，无法修改去重阈值
