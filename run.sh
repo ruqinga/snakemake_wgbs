@@ -18,7 +18,7 @@ while [[ "$#" -gt 0 ]]; do
             shift
             ;;
         -y)
-            confirm="yes"  # -y 标志，表示确认
+            confirm_run="y"  # -y 标志，表示确认
             shift
             ;;
         *)
@@ -121,12 +121,11 @@ snakemake \
 
 # 提示是否确认实际执行任务
 # 检查是否传递了 -y 参数
-if [[ "$5" == "-y" ]]; then
-    confirm_run="y"
-else
+if [[ -z "$confirm_run" ]]; then
     read -p "是否确认执行任务（实际提交作业）？(y/n): " confirm_run
 fi
 
+# 如果 confirm_run 不是 "y" 或 "Y"，则取消任务
 if [[ "$confirm_run" != "y" && "$confirm_run" != "Y" ]]; then
     echo "任务已取消！"
     exit 0

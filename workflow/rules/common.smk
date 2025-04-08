@@ -37,7 +37,8 @@ class SampleProcessor:
             f"Results/04_bismark/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.bam",
             f"Results/05_dedu/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.deduplicated.sorted.bam",
             f"Results/06_extract/{sample}/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.deduplicated.bismark.cov.gz",
-            f"Results/07_visualization/bw/{sample}_t{t}.bw"
+            f"Results/07_visualization/bw/{sample}_t{t}.bw",
+            f"Results/08_tss_tes/repeats/{sample}_level_dis_mean.txt"
         ]
 
     # 获取所有目标路径

@@ -24,5 +24,10 @@ bismark:
   index: "/public/slst/home/qushy/toolkit/reference_genome/index/WGBS-index"
   genome_fasta_fai: "/public/slst/home/qushy/toolkit/reference_genome/index/WGBS-index/mm10-lambdaDNA.fa.fai"
 bis_extractor:
-  params: "--gzip --bedGraph --counts --report --comprehensive --cytosine_report"
+  params: "--gzip --bedGraph --counts --report --comprehensive --multicore 20 --buffer_size 10G"
+  #params: "--gzip --bedGraph --counts --report --comprehensive --cytosine_report" # cytosine_report太限速了，也用不上
 bw_threshold: "5"
+tss_tes:
+  repeats: "/home_data/home/slst/leixy2023/data/database/mm10/index_tss_tes/mm10_rep_tss_tes.bed"
+  coding_gene: "/home_data/home/slst/leixy2023/data/database/mm10/index_tss_tes/mm10_coding_gene_tss_tes.bed"
+
