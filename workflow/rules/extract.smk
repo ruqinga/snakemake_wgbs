@@ -2,7 +2,7 @@ rule extract_methylation_pe:
     input:
         deduplicated_bam = get_dedu_out
     output:
-        cytosine_report = "Results/06_extract/{sample}/{sample}_1_val_1_bismark_bt2_pe.deduplicated.bedGraph.gz"
+        cytosine_result = "Results/06_extract/{sample}/{sample}_1_val_1_bismark_bt2_pe.deduplicated.bismark.cov.gz"
     conda:
         config["conda_env"]
     group: "processing_group"
@@ -24,7 +24,7 @@ rule extract_methylation_se:
     input:
         deduplicated_bam = get_dedu_out
     output:
-        cytosine_report = "Results/06_extract/{sample}/{sample}_trimmed_bismark_bt2_se.deduplicated.bedGraph.gz"
+        cytosine_result = "Results/06_extract/{sample}/{sample}_trimmed_bismark_bt2_se.deduplicated.bismark.cov.gz"
     conda:
         config["conda_env"]
     group: "processing_group"

@@ -139,9 +139,9 @@ snakemake \
     --executor cluster-generic \
     --cluster-generic-submit-cmd "python workflow/scripts/submit_job.py --config config/cluster_config.yaml --seqtype "bs" --sample {wildcards} --rule {rule}" \
     --latency-wait 60 \
-    --jobs 5 \
+    --jobs 10 \
     --use-conda \
-    --groups processing_group=20 global_process=6 \
+    --groups processing_group=20 global_process=10 \
     --config fq_dir="$fq_dir" reads="$json_output" bismark_strategy="$bismark_strategy"
 
 

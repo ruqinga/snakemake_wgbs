@@ -2,7 +2,7 @@ configfile: "config/config.yaml"
 include: "rules/common.smk"
 
 # 获取全局参数
-# print(f"Config: {config}")
+print(f"Config: {config}")
 
 processor = SampleProcessor(config)
 sample_info = processor.sample_info
@@ -22,4 +22,5 @@ include: "rules/qc.smk"
 include: "rules/bismark.smk" # 处理公开数据
 include: "rules/deduplicate.smk" # 去重，无法修改去重阈值
 include: "rules/extract.smk" # 提取甲基化信息
+include: "rules/visualization.smk" # bw
 
