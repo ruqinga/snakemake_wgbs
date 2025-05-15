@@ -64,7 +64,7 @@ def generate_qsub_command(config,seqtype, sample, rule, command):
         name = f"{seqtype}_{sample}"
 
     current_dir = os.getcwd()
-    output_dir = os.path.join(current_dir, f"pbs/log/{current_date}/{name}_out.log")   # 输出文件路径
+    output_dir = os.path.join(current_dir, f"log_pbs/{current_date}/{name}_out.log")   # 输出文件路径
     os.makedirs(os.path.dirname(output_dir), exist_ok=True)
 
     # 将 command 列表转换为字符串

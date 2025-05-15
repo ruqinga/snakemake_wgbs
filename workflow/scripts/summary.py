@@ -15,7 +15,6 @@ outputfile = Path(snakemake.output.summary)
 # 设置日志格式
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
-
 def extract_from_trim_log(log_file):
     with open(log_file, 'r') as f:
         content = f.read()
