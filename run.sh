@@ -1,6 +1,7 @@
 #!/bin/bash
 # 用于处理单端和双端数据并调用 Snakemake 运行流程
 # 用法: bash run.sh <fq_dir> [--cut] [--pbat] [-y]
+# nohup用法：nohup bash run.sh ../rawdata/WT_ln [--cut] [--pbat] -y > run.log 2>&1 &
 
 # 默认值
 Snakefile="./workflow/Snakefile"  # 默认选择 Snakefile
@@ -91,7 +92,10 @@ json_output_pe=$(IFS=,; echo "[${json_array_pe[*]}]")
 json_output_se=$(IFS=,; echo "[${json_array_se[*]}]")
 json_output=$(IFS=,; echo "[${json_array[*]}]")
 
-#echo "$json_output"
+# 保存 json_output 到文件
+json_output_file="$fq_dir/reads_json.json"
+echo "$json_output" > "$json_output_file"
+echo "save input reads information to $json_output_file"
 
 # 检查 JSON 数据是否为空并输出相应的提示信息
 if [[ -z "$json_output_se" || "$json_output_se" == "[]" ]]; then
@@ -138,10 +142,10 @@ snakemake \
     --executor cluster-generic \
     --cluster-generic-submit-cmd "python workflow/scripts/submit_job.py --config config/cluster_config.yaml --seqtype "bs" --sample {wildcards} --rule {rule}" \
     --latency-wait 60 \
-    --jobs 10 \
+    --jobs 5 \
     --use-conda \
-    --groups processing_group=20 global_process=10 \
+    --groups processing_group=20 Additional_analysis=10 \
     --config fq_dir="$fq_dir" reads="$json_output" bismark_strategy="$bismark_strategy"
 
-
+bismark_pe
 echo "任务已完成！"

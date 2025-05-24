@@ -18,7 +18,7 @@ rule deduplicate_bismark_pe:
         samtools sort -@ 20 -o {output.deduplicated_sorted_bam} {output.deduplicated_bam}
         """
 
-rule deduplicate_bismark:
+rule deduplicate_bismark_se:
     input:
         bam = get_bismark_out
     output:

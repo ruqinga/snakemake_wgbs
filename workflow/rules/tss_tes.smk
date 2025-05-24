@@ -8,7 +8,7 @@ rule tss_tes_repeats:
         norm_mean="Results/08_tss_tes/repeats/{sample}_level_dis_mean.txt"
     conda:
         config["conda_env"]
-    group: "processing_group"
+    group: "Additional_analysis"
     params:
         index_bed=config["tss_tes"]["repeats"],
         bw_threshold=config["bw_threshold"],

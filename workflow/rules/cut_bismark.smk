@@ -14,7 +14,7 @@ rule cut_pe:
         options_pe = config["cutadapt"]["pe"],
         clean_out = "Results/02_cleandata/cut"
     log:
-        log="{params.clean_out}/logs/{sample}.log"
+        log="Results/02_cleandata/logs/{sample}.log"
     shell:
         """
         cutadapt {params.options_pe} -o {output.cutted_read[0]} -p {output.cutted_read[1]} {input.trimmed_read[0]} {input.trimmed_read[1]} > {log.log} 2>&1
@@ -32,7 +32,7 @@ rule cut_se:
         options_se = config["cutadapt"]["se"],
         clean_out = "Results/02_cleandata/cut"
     log:
-        log="{params.clean_out}/logs/{sample}.log"
+        log="Results/02_cleandata/logs/{sample}.log"
     shell:
         """
         cutadapt {params.options_se} -o {output.cutted_read} {input.trimmed_read} > {log.log} 2>&1

@@ -5,7 +5,7 @@ rule sort_bed:
         sorted_bed = "Results/06_extract/{sample}/sorted.bed"
     conda:
         config["conda_env"]
-    group: "processing_group"
+    group: "Additional_analysis"
     shell:
         """
         # sort 共6列 chr start end level methy unmethy
@@ -21,7 +21,7 @@ rule bw:
         filtered_bw = "Results/07_visualization/bw/{sample}_t{t}.bw"
     conda:
         config["conda_env"]
-    group: "processing_group"
+    group: "Additional_analysis"
     params:
         genome_fasta_fai = config["bismark"]["genome_fasta_fai"],
         extract_threshold = config["bw_threshold"],
@@ -34,6 +34,6 @@ rule bw:
         bash {params.scripts_dir} {params.genome_fasta_fai} {input.sorted_bed} {output.filtered_bed} {params.extract_threshold} > {log.log} 2>&1
      
         # 转为bw
-        /home_data/home/slst/leixy2023/software/bedGraphToBigWig {output.filtered_bed} {params.genome_fasta_fai} {output.filtered_bw} > {log.log} 2>&1
+        bedGraphToBigWig {output.filtered_bed} {params.genome_fasta_fai} {output.filtered_bw} > {log.log} 2>&1
         """
 
