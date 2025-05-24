@@ -100,3 +100,11 @@ def get_dedu_out(wildcards):
         return f"Results/05_dedu/{wildcards.sample}_1_val_1_bismark_bt2_pe.deduplicated.bam"
     else:
         raise ValueError(f"Invalid 'dt' configuration: {config['dt']}")
+
+def get_cytosine_result(wildcards):
+    if sample_info[wildcards.sample] == "SE":
+        return f"Results/06_extract/{wildcards.sample}_trimmed_bismark_bt2_se.deduplicated.bismark.cov.gz"
+    elif sample_info[wildcards.sample] == "PE":
+        return f"Results/06_extract/{wildcards.sample}_1_val_1_bismark_bt2_pe.deduplicated.bismark.cov.gz"
+    else:
+        raise ValueError(f"Invalid 'dt' configuration: {config['dt']}")

@@ -1,6 +1,6 @@
 rule sort_bed:
     input:
-        cytosine_result="Results/06_extract/{sample}/{sample}_1_val_1_bismark_bt2_pe.deduplicated.bismark.cov.gz"
+        cytosine_result=get_cytosine_result
     output:
         sorted_bed = "Results/06_extract/{sample}/sorted.bed"
     conda:
