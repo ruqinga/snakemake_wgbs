@@ -147,5 +147,4 @@ snakemake \
     --groups processing_group=20 Additional_analysis=10 \
     --config fq_dir="$fq_dir" reads="$json_output" bismark_strategy="$bismark_strategy"
 
-bismark_pe
 echo "任务已完成！"

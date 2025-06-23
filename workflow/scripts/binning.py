@@ -57,7 +57,7 @@ def process_file(file_path, output_dir, chrom_fai, bin_size, count_threshold, so
         sort_bed_file(file_path, sorted_tmp)
         file_to_process = sorted_tmp
 
-    binned_tmp = os.path.join(output_dir, f"bed/{base}_binning_tmp.bed")
+    binned_tmp = os.path.join(output_dir, f"bed/{base}_binning_{bin_size}_tmp.bed")
     bin_bed_file(file_to_process, binned_tmp, bin_size)
 
     sorted_binned = os.path.join(output_dir, f"bed/{base}_bin_{bin_size}.bed")

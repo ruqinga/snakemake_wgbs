@@ -23,7 +23,7 @@ rule bismark_se:
     input:
         trimmed_read = get_trimmed_list
     output:
-        bam = "Results/04_bismark/{sample}_trimmed_bismark_bt2_se.bam"
+        bam = "Results/04_bismark/{sample}_trimmed_bismark_bt2.bam"
     conda:
         config["conda_env"]
     group: "processing_group"
