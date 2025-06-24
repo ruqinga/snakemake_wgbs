@@ -6,7 +6,6 @@ rule bismark_pe:
     conda:
         config["conda_env"]
     params:
-        option = config["bismark"]["params"],
         genome = config["bismark"]["index"],
         strategy= config["bismark_strategy"],
         bis_out = "Results/04_bismark"
@@ -14,7 +13,7 @@ rule bismark_pe:
         log="Results/04_bismark/logs/{sample}.log"
     shell:
         """
-        bismark {params.option} {params.strategy} --genome {params.genome} -1 {input.trimmed_read[0]} -2 {input.trimmed_read[1]} -o {params.bis_out} > {log.log} 2>&1
+        bismark {params.strategy} --genome {params.genome} -1 {input.trimmed_read[0]} -2 {input.trimmed_read[1]} -o {params.bis_out} > {log.log} 2>&1
         """
 
 
@@ -26,7 +25,6 @@ rule bismark_se:
     conda:
         config["conda_env"]
     params:
-        option = config["bismark"]["params"],
         genome = config["bismark"]["index"],
         strategy= config["bismark_strategy"],
         bis_out = "Results/04_bismark"
@@ -34,5 +32,5 @@ rule bismark_se:
         log="Results/04_bismark/logs/{sample}.log"
     shell:
         """
-        bismark {params.option} {params.strategy} --genome {params.genome} {input.trimmed_read} -o {params.bis_out} > {log.log} 2>&1
+        bismark {params.strategy} --genome {params.genome} {input.trimmed_read} -o {params.bis_out} > {log.log} 2>&1
         """
