@@ -3,7 +3,7 @@ rule fastqc_rawdata:
         rawdata = get_fq_list
     output:
         raw_qc_finish = temp("Results/03_qc/rawdata/{sample}_tmp.txt")
-    group: "processing_group"
+    group: "qc"
     conda:
         config["conda_env"]
     params:
@@ -23,7 +23,7 @@ rule fastqc_cleandata:
         trim_qc_finish = temp("Results/03_qc/cleandata/{sample}_tmp.txt")
     conda:
         config["conda_env"]
-    group: "processing_group"
+    group: "qc"
     params:
         qc_out_trim = "Results/03_qc/cleandata"
     log:
@@ -41,7 +41,7 @@ rule multiqc_rawdata:
         report="Results/03_qc/rawdata/multiqc_report.html"
     conda:
         config["conda_env"]
-    group: "global_process"
+    group: "qc"
     log:
         "Results/03_qc/rawdata/logs/multiqc_raw.log"
     params:
@@ -59,7 +59,7 @@ rule multiqc_cleandata:
         report="Results/03_qc/cleandata/multiqc_report.html"
     conda:
         config["conda_env"]
-    group: "global_process"
+    group: "qc"
     log:
         "Results/03_qc/cleandata/logs/multiqc_clean.log"
     params:

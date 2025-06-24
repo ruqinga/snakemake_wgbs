@@ -6,7 +6,6 @@ rule deduplicate_bismark_pe:
         deduplicated_sorted_bam = "Results/05_dedu/{sample}_1_val_1_bismark_bt2_pe.deduplicated.sorted.bam"
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         dedu_out = "Results/05_dedu"
     log:
@@ -26,7 +25,6 @@ rule deduplicate_bismark_se:
         deduplicated_sorted_bam = "Results/05_dedu/{sample}_trimmed_bismark_bt2_se.deduplicated.sorted.bam"
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         dedu_out = "Results/05_dedu"
     log:

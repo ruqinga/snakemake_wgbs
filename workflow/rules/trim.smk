@@ -8,7 +8,6 @@ rule trim_pe:
         ]
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         option = config["trim"]["params"],
         trim_out= "Results/02_cleandata/trim_galore"
@@ -26,7 +25,6 @@ rule trim_se:
         trimmed_read = "Results/02_cleandata/trim_galore/{sample}_trimmed.fq.gz"
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         option = config["trim"]["params"],
         trim_out= "Results/02_cleandata/trim_galore"

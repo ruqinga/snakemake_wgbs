@@ -45,7 +45,6 @@ rule bismark_pe:
         bam = "Results/04_bismark/{sample}_1_val_1_bismark_bt2_pe.bam"
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         option = config["bismark"]["params"],
         genome = config["bismark"]["index"],
@@ -66,7 +65,6 @@ rule bismark_se:
         bam = "Results/04_bismark/{sample}_trimmed_bismark_bt2_se.bam"
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         option = config["bismark"]["params"],
         genome = config["bismark"]["index"],

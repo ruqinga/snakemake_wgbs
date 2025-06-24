@@ -5,7 +5,6 @@ rule extract_methylation_pe:
         cytosine_result = "Results/06_extract/{sample}/{sample}_1_val_1_bismark_bt2_pe.deduplicated.bismark.cov.gz"
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         genome_folder = config["bismark"]["index"],
         option= config["bis_extractor"]["params"],
@@ -27,7 +26,6 @@ rule extract_methylation_se:
         cytosine_result = "Results/06_extract/{sample}/{sample}_trimmed_bismark_bt2_se.deduplicated.bismark.cov.gz"
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         genome_folder = config["bismark"]["index"],
         option= config["bis_extractor"]["params"],
