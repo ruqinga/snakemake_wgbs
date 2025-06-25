@@ -161,6 +161,7 @@ def main():
 
     # 输出结果
     df.to_csv(outputfile, sep='\t', index=False, encoding='utf-8')
+    print("Wrote summary file to {}".format(outputfile))
 
 
 if __name__ == "__main__":
