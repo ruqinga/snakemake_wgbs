@@ -137,7 +137,19 @@ fi
 
 # 实际运行 Snakemake 工作流
 echo "运行 Snakemake ..."
-snakemake \
+
+if [ -z "$bismark_strategy" ]; then
+    snakemake \
+    --snakefile "$Snakefile" \
+    --executor cluster-generic \
+    --cluster-generic-submit-cmd "python workflow/scripts/submit_job.py --config config/cluster_config.yaml --seqtype "bs" --sample {wildcards} --rule {rule}" \
+    --latency-wait 60 \
+    --jobs 5 \
+    --use-conda \
+    --groups processing_group=20 Additional_analysis=10 \
+    --config fq_dir="$fq_dir" reads="$json_output"
+else
+    snakemake \
     --snakefile "$Snakefile" \
     --executor cluster-generic \
     --cluster-generic-submit-cmd "python workflow/scripts/submit_job.py --config config/cluster_config.yaml --seqtype "bs" --sample {wildcards} --rule {rule}" \
@@ -146,5 +158,6 @@ snakemake \
     --use-conda \
     --groups processing_group=20 Additional_analysis=10 \
     --config fq_dir="$fq_dir" reads="$json_output" bismark_strategy="$bismark_strategy"
+fi
 
 echo "任务已完成！"
