@@ -21,8 +21,8 @@ rule deduplicate_bismark_se:
     input:
         bam = get_bismark_out
     output:
-        deduplicated_bam = temp("Results/05_dedu/{sample}_trimmed_bismark_bt2_se.deduplicated.bam"),
-        deduplicated_sorted_bam = "Results/05_dedu/{sample}_trimmed_bismark_bt2_se.deduplicated.sorted.bam"
+        deduplicated_bam = temp("Results/05_dedu/{sample}_trimmed_bismark_bt2.deduplicated.bam"),
+        deduplicated_sorted_bam = "Results/05_dedu/{sample}_trimmed_bismark_bt2.deduplicated.sorted.bam"
     conda:
         config["conda_env"]
     params:

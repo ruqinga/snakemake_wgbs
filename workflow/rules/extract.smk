@@ -23,7 +23,7 @@ rule extract_methylation_se:
     input:
         deduplicated_bam = get_dedu_out
     output:
-        cytosine_result = "Results/06_extract/{sample}/{sample}_trimmed_bismark_bt2_se.deduplicated.bismark.cov.gz"
+        cytosine_result = "Results/06_extract/{sample}/{sample}_trimmed_bismark_bt2.deduplicated.bismark.cov.gz"
     conda:
         config["conda_env"]
     params:

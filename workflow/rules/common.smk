@@ -35,8 +35,8 @@ class SampleProcessor:
             f"Results/03_qc/rawdata/multiqc_report.html",
             f"Results/03_qc/cleandata/multiqc_report.html",
             #f"Results/04_bismark/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.bam",
-            f"Results/05_dedu/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.deduplicated.sorted.bam",
-            f"Results/06_extract/{sample}/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.deduplicated.bismark.cov.gz",
+            #f"Results/05_dedu/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.deduplicated.sorted.bam",
+            #f"Results/06_extract/{sample}/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.deduplicated.bismark.cov.gz",
             f"Results/07_visualization/bw/{sample}_t{t}.bw",
             f"Results/08_tss_tes/repeats/{sample}_level_dis_mean.txt",
             f"Results/summary.csv"
@@ -95,7 +95,7 @@ def get_bismark_out(wildcards):
 
 def get_dedu_out(wildcards):
     if sample_info[wildcards.sample] == "SE":
-        return f"Results/05_dedu/{wildcards.sample}_trimmed_bismark_bt2_se.deduplicated.bam"
+        return f"Results/05_dedu/{wildcards.sample}_trimmed_bismark_bt2.deduplicated.bam"
     elif sample_info[wildcards.sample] == "PE":
         return f"Results/05_dedu/{wildcards.sample}_1_val_1_bismark_bt2_pe.deduplicated.bam"
     else:
@@ -103,7 +103,7 @@ def get_dedu_out(wildcards):
 
 def get_cytosine_result(wildcards):
     if sample_info[wildcards.sample] == "SE":
-        return f"Results/06_extract/{wildcards.sample}/{wildcards.sample}_trimmed_bismark_bt2_se.deduplicated.bismark.cov.gz"
+        return f"Results/06_extract/{wildcards.sample}/{wildcards.sample}_trimmed_bismark_bt2.deduplicated.bismark.cov.gz"
     elif sample_info[wildcards.sample] == "PE":
         return f"Results/06_extract/{wildcards.sample}/{wildcards.sample}_1_val_1_bismark_bt2_pe.deduplicated.bismark.cov.gz"
     else:
