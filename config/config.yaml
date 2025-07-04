@@ -26,6 +26,7 @@ bis_extractor:
   params: "--gzip --bedGraph --counts --report --comprehensive --multicore 20 --buffer_size 50G"
   #params: "--gzip --bedGraph --counts --report --comprehensive --cytosine_report" # cytosine_report太限速了，也用不上
 bw_threshold: "5"
+bin_threshold: "10"
 tss_tes:
   repeats: "/home_data/home/slst/leixy2023/data/database/mm10/index_tss_tes/mm10_rep_tss_tes.bed"
   coding_gene: "/home_data/home/slst/leixy2023/data/database/mm10/index_tss_tes/mm10_coding_gene_tss_tes.bed"

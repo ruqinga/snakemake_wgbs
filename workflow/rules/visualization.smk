@@ -37,3 +37,23 @@ rule bw:
         bedGraphToBigWig {output.filtered_bed} {params.genome_fasta_fai} {output.filtered_bw} > {log.log} 2>&1
         """
 
+rule bin_bw:
+    input:
+        sorted_bed="Results/06_extract/{sample}/sorted.bed"
+    output:
+        filtered_bed="Results/07_visualization/bed/{sample}_bin_100_t{t}.bed",
+        filtered_bw="Results/07_visualization/bw/{sample}_bin_100_t{t}.bw"
+    conda:
+        config["conda_env"]
+    group: "Additional_analysis"
+    params:
+        genome_fasta_fai=config["bismark"]["genome_fasta_fai"],
+        extract_threshold=config["bin_threshold"],
+        scripts_dir="./workflow/scripts/binning.py",
+        out_dir="Results/07_visualization"
+    log:
+        log="Results/07_visualization/logs/{sample}_bin_100_t{t}.log"
+    shell:
+        """
+        bash {params.scripts_dir} -i {input.sorted_bed} -o {params.outdir} --chrom_fai {params.genome_fasta_fai} --count_threshold {params.extract_threshold} --sorted > {log.log} 2>&1
+        """

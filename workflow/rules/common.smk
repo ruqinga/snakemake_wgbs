@@ -2,7 +2,8 @@
 class SampleProcessor:
     def __init__(self, config):
         self.reads = config.get("reads", [])
-        self.threshold = config.get("bw_threshold",3)
+        self.bw_threshold = config.get("bw_threshold",3)
+        self.bin_threshold = config.get("bin_threshold",10)
         self.sample_names = []
         self.sample_info = {}
         self.process_reads()
@@ -29,7 +30,8 @@ class SampleProcessor:
     # 所有要生成的文件
     def generate_targets(self, sample):
         dt = 'pe' if self.sample_info[sample] == 'PE' else 'se'
-        t = self.threshold
+        t_bw = self.bw_threshold
+        t_bin = self.bin_threshold
         return [
             f"Results/02_cleandata/trim_galore/{sample}_{self.get_trim_ext(sample)}.fq.gz",
             f"Results/03_qc/rawdata/multiqc_report.html",
@@ -37,7 +39,8 @@ class SampleProcessor:
             #f"Results/04_bismark/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.bam",
             #f"Results/05_dedu/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.deduplicated.sorted.bam",
             #f"Results/06_extract/{sample}/{sample}_{self.get_trim_ext(sample)}_bismark_bt2_{dt}.deduplicated.bismark.cov.gz",
-            f"Results/07_visualization/bw/{sample}_t{t}.bw",
+            f"Results/07_visualization/bw/{sample}_t{t_bw}.bw",
+            f"Results/07_visualization/bw/{sample}_bin_100_t{t_bin}.bw",
             f"Results/08_tss_tes/repeats/{sample}_level_dis_mean.txt",
             f"Results/summary.csv"
         ]
