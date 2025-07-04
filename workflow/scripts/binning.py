@@ -39,13 +39,12 @@ def filter_binned_file(input_file, output_file, count_threshold):
     subprocess.run(awk_cmd, shell=True, check=True)
 
 def bed_to_bigwig(filtered_bed, chrom_fai, output_bw):
-    tmp_bed = f"{filtered_bed}.tmp"
+    tmp_bed = f"{filtered_bed}.slop_tmp"
     subprocess.run(f"sed -i 's/ \\+/\\t/g' {filtered_bed}", shell=True, check=True)
     subprocess.run(f"bedtools slop -i {filtered_bed} -g {chrom_fai} -b 0 > {tmp_bed}", shell=True, check=True)
     subprocess.run(f"bedGraphToBigWig {tmp_bed} {chrom_fai} {output_bw}", shell=True, check=True)
     # Optional cleanup:
-    # os.remove(filtered_bed)
-    os.remove(tmp_bed)
+    # os.remove(tmp_bed)
 
 def process_file(file_path, output_dir, chrom_fai, bin_size, count_threshold, sorted_input):
     base = Path(file_path).parent.name
@@ -57,24 +56,26 @@ def process_file(file_path, output_dir, chrom_fai, bin_size, count_threshold, so
         sort_bed_file(file_path, sorted_tmp)
         file_to_process = sorted_tmp
 
-    binned_tmp = os.path.join(output_dir, f"bed/{base}_binning_{bin_size}_tmp.bed")
+    binned_tmp = os.path.join(output_dir, f"bed/{base}_binning_{bin_size}_unsorted.bed")
     bin_bed_file(file_to_process, binned_tmp, bin_size)
 
     sorted_binned = os.path.join(output_dir, f"bed/{base}_bin_{bin_size}.bed")
     sort_bed_file(binned_tmp, sorted_binned)
 
-    filtered_bed = os.path.join(output_dir, f"bed/{base}_bin_{bin_size}_t_{count_threshold}_tmp.bed")
+    filtered_bed = os.path.join(output_dir, f"bed/{base}_bin_{bin_size}_t{count_threshold}.bed")
     filter_binned_file(sorted_binned, filtered_bed, count_threshold)
 
-    output_bw = os.path.join(output_dir, f"bw/{base}_bin_{bin_size}_t_{count_threshold}.bw")
+    output_bw = os.path.join(output_dir, f"bw/{base}_bin_{bin_size}_t{count_threshold}.bw")
     bed_to_bigwig(filtered_bed, chrom_fai, output_bw)
+
+    os.remove(binned_tmp)
 
     print(f"✓ Finished processing: {file_path}")
     print(f"→ Output BigWig: {output_bw}\n")
 
 def main():
     parser = argparse.ArgumentParser(description="BED binning and BigWig conversion pipeline.")
-    parser.add_argument('-i','--input_dir', required=True, help='Input directory with BED files.')
+    parser.add_argument('-i','--input_file', required=True, help='Input directory with BED files.')
     parser.add_argument('-o','--output_dir', required=True, help='Directory to save processed files.')
     parser.add_argument('--chrom_fai', required=True, help='Path to .fa.fai file for genome.')
     parser.add_argument('--bin_size', type=int, default=100, help='Size of bins.')
@@ -84,21 +85,21 @@ def main():
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(f"{args.output_dir}/bed", exist_ok=True)
+    os.makedirs(f"{args.output_dir}/bw", exist_ok=True)
 
-    bed_files = list(Path(args.input_dir).rglob("*.bed"))
-    if not bed_files:
-        print(f"No .bed files found in {args.input_dir}")
+    file_path = Path(args.input_file)
+    if not file_path.exists():
+        print(f"no such file: {args.input_file}")
         return
 
-    for file_path in bed_files:
-        process_file(
-            str(file_path),
-            args.output_dir,
-            args.chrom_fai,
-            args.bin_size,
-            args.count_threshold,
-            args.sorted
-        )
+    process_file(str(file_path),
+                 args.output_dir,
+                 args.chrom_fai,
+                 args.bin_size,
+                 args.count_threshold,
+                 args.sorted
+                 )
 
 if __name__ == '__main__':
     main()
