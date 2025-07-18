@@ -55,5 +55,5 @@ rule bin_bw:
         log="Results/07_visualization/logs/{sample}_bin_100_t{t}.log"
     shell:
         """
-        bash {params.scripts_dir} -i {input.sorted_bed} -o {params.outdir} --chrom_fai {params.genome_fasta_fai} --count_threshold {params.extract_threshold} --sorted > {log.log} 2>&1
+        bash {params.scripts_dir} -i {input.sorted_bed} -o {params.out_dir} --chrom_fai {params.genome_fasta_fai} --count_threshold {params.extract_threshold} --sorted > {log.log} 2>&1
         """
