@@ -4,6 +4,13 @@ import pandas as pd
 from pathlib import Path
 import sys
 
+# trim_logs_dir = Path("Results/02_cleandata/trim_galore/logs/")  # resource of raw reads
+# bismark_report_dir = Path("Results/04_bismark/")  # resource of clean and mapped(aligned) reads
+# dedu_report_dir = Path("Results/05_dedu/")  # resource of dedu reads
+# extract_methy_logs_dir = Path("Results/06_extract/logs/")  # resource of dedu_genome_methy_ratio
+# bed_dir = Path("Results/06_extract/")
+# outputfile = Path("Results/summary.csv")
+
 # 获取 Snakemake 参数
 trim_logs_dir = Path(snakemake.params.trim_log_dir)
 bismark_report_dir = Path(snakemake.params.bismark_report_dir)
@@ -111,6 +118,7 @@ def main():
     # 2. bismark report
     for report_file in bismark_report_dir.glob("*_1_val_1_bismark_bt2_PE_report.txt"):
         sample = report_file.stem.replace("_1_val_1_bismark_bt2_PE_report", "")
+        #print(sample)
 
         clean, aligned, methy = extract_bis_report(report_file)
 
