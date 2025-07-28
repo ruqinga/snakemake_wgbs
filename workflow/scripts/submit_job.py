@@ -45,11 +45,12 @@ def generate_qsub_command(config,seqtype, sample, rule, command):
     job_id = generate_job_id()
 
     # 读取 config 中的参数
-    queue = config.get('queue', 'slst_fat')
-    nodes = config.get('nodes', 1)
-    ppn = config.get('ppn', 4)
-    walltime = config.get('walltime', '25:00:00')
-    mem = config.get('mem', '8G')
+    default_config = config.get('__default__', {})
+    queue = default_config.get('queue', 'slst_fat')
+    nodes = default_config.get('nodes', 1)
+    ppn = default_config.get('ppn', 4)
+    walltime = default_config.get('walltime', '25:00:00')
+    mem = default_config.get('mem', '8G')
 
     # 定义输出文件路径，使用当前日期
     current_date = datetime.now().strftime("%Y%m%d")  # 获取当前日期，格式化为 YYYYMMDD
