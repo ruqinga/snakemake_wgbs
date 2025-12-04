@@ -4,15 +4,15 @@ __default__:
   nodes: 1               # 默认节点数
   ppn: 20                # 默认每节点核心数
   walltime: "300:00:00"   # 默认运行时间
-  mem: "50G"              # 默认内存
+  mem: "100G"              # 默认内存
 
 # ============== 任务密集型配置 ==============
 GROUP:
-  queue: "slst_pub"     # 覆盖默认队列
+  queue: "slst_fat"     # 覆盖默认队列
   nodes: 1               # 默认节点数
   ppn: 5                 # 覆盖默认 ppn
-  mem: "10G"             # 此规则需要更少内存
-  walltime: "24:00:00"   # 任务时间
+  mem: "50G"             # 此规则需要更少内存
+  walltime: "100:00:00"   # 任务时间
 
 #samtools_sort:
 #  ppn: 4qq

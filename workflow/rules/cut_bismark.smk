@@ -9,7 +9,6 @@ rule cut_pe:
             ]
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         options_pe = config["cutadapt"]["pe"],
         clean_out = "Results/02_cleandata/cut"
@@ -27,7 +26,6 @@ rule cut_se:
         cutted_read = "Results/02_cleandata/cut/{sample}_trimmed.fq.gz"
     conda:
         config["conda_env"]
-    group: "processing_group"
     params:
         options_se = config["cutadapt"]["se"],
         clean_out = "Results/02_cleandata/cut"
