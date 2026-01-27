@@ -6,12 +6,13 @@
 # 默认值
 Snakefile="./workflow/Snakefile"  # 默认选择 Snakefile
 bismark_strategy=""
+NOCUT=false                 # 默认需要 cut
 
 # 解析命令行选项
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
-        --cut)
-            Snakefile="./workflow/Snakefile_cut"  # 如果指定了 --cut，则选择 Snakefile
+        --nocut)
+            NOCUT=true
             shift
             ;;
         --pbat)
@@ -37,10 +38,11 @@ fi
 
 echo "输入数据目录: $fq_dir"
 # 判断是否使用cut
-if [ "$Snakefile" == "./workflow/Snakefile" ]; then
-    echo "不使用 cut"
+if $NOCUT; then
+    echo "跳过 cut 步骤"
 else
     echo "运行 cut_bismark 处理 zhenglab data"
+    Snakefile="./workflow/Snakefile_cut"
 fi
 
 # 判断 bismark_strategy 的值来输出不同信息
