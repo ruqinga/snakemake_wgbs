@@ -13,7 +13,7 @@ rule bismark_pe:
         log="Results/04_bismark/logs/{sample}.log"
     shell:
         """
-        bismark {params.strategy} --parallel 4 --genome {params.genome} -1 {input.trimmed_read[0]} -2 {input.trimmed_read[1]} -o {params.bis_out} > {log.log} 2>&1
+        bismark {params.strategy} --parallel 8 --genome {params.genome} -1 {input.trimmed_read[0]} -2 {input.trimmed_read[1]} -o {params.bis_out} > {log.log} 2>&1
         """
 
 
@@ -32,5 +32,5 @@ rule bismark_se:
         log="Results/04_bismark/logs/{sample}.log"
     shell:
         """
-        bismark {params.strategy} --parallel 4 --genome {params.genome} {input.trimmed_read} -o {params.bis_out} > {log.log} 2>&1
+        bismark {params.strategy} --parallel 8 --genome {params.genome} {input.trimmed_read} -o {params.bis_out} > {log.log} 2>&1
         """

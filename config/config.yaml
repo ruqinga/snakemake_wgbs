@@ -15,10 +15,10 @@ conda_env: "base-omics"
 
 # Pipeline Configuration Parameters
 trim:
-  params: "--quality 20 --max_n 4 --length 30 --phred33"
+  params: "-j 8 --quality 20 --max_n 4 --length 30 --phred33"
 cutadapt:
-  pe: "-a GGGGGGGGGGGGX -a AGATCGGAAGAG -A AGATCGGAAGAG -A GGGGGGGGGGGGX -g CTCTTCCGATCT -G CTCTTCCGATCT -n 10 --max-n 0.05 -q 20,20 -u -10 -U 10 -m 30 -e 0.2"
-  se: "-a GGGGGGGGGGGGX -a AGATCGGAAGAG -g CTCTTCCGATCT -n 10 --max-n 0.05 -q 20 -u -10 -m 30 -e 0.2"
+  pe: "-j 8 -a GGGGGGGGGGGGX -a AGATCGGAAGAG -A AGATCGGAAGAG -A GGGGGGGGGGGGX -g CTCTTCCGATCT -G CTCTTCCGATCT -n 10 --max-n 0.05 -q 20,20 -u -10 -U 10 -m 30 -e 0.2"
+  se: "-j 8 -a GGGGGGGGGGGGX -a AGATCGGAAGAG -g CTCTTCCGATCT -n 10 --max-n 0.05 -q 20 -u -10 -m 30 -e 0.2"
 bismark:
   index: "/public/slst/home/qushy/toolkit/reference_genome/index/WGBS-index"
   genome_fasta_fai: "/public/slst/home/qushy/toolkit/reference_genome/index/WGBS-index/mm10-lambdaDNA.fa.fai"
